@@ -9,7 +9,7 @@ class QrCodeServiceProvider extends ServiceProvider
     /**
      * Register the service provider.
      */
-    public function register()
+    public function register(): void
     {
         $this->app->bind('qrcode', function () {
             return new Generator();
@@ -18,10 +18,8 @@ class QrCodeServiceProvider extends ServiceProvider
 
     /**
      * Get the services provided by the provider.
-     *
-     * @return array
      */
-    public function provides()
+    public function provides(): array
     {
         return [Generator::class];
     }

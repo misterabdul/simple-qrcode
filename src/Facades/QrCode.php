@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Facade;
 use SimpleSoftwareIO\QrCode\Generator;
 
 /**
- * @method static void|Illuminate\Support\HtmlString|string generate(string $text, string $filename = null)
+ * @method static \Illuminate\Support\HtmlString|string|null generate(string $text, ?string $filename = null)
  * @method static \SimpleSoftwareIO\QrCode\Generator merge(string $filepath, float $percentage = .2, bool $absolute = false)
  * @method static \SimpleSoftwareIO\QrCode\Generator mergeString(string $content, float $percentage = .2)
  * @method static \SimpleSoftwareIO\QrCode\Generator size(int $pixels)
@@ -28,12 +28,12 @@ use SimpleSoftwareIO\QrCode\Generator;
  * @method static \BaconQrCode\Renderer\Eye\EyeInterface getEye()
  * @method static \BaconQrCode\Renderer\RendererStyle\Fill getFill()
  * @method static \BaconQrCode\Renderer\Color\ColorInterface createColor(int $red, int $green, int $blue, ?int $alpha = null)
- * @method static void|Illuminate\Support\HtmlString|string BTC(string $address, string $amount, array $option = null)
- * @method static void|Illuminate\Support\HtmlString|string Email(string $email, string $subject, string $body)
- * @method static void|Illuminate\Support\HtmlString|string Geo(float $latitude, float $longitude)
- * @method static void|Illuminate\Support\HtmlString|string PhoneNumber(string $phoneNumber)
- * @method static void|Illuminate\Support\HtmlString|string SMS(string $phoneNumber, string $message)
- * @method static void|Illuminate\Support\HtmlString|string WiFi(string $phoneNumber, string $message)
+ * @method static \Illuminate\Support\HtmlString|string|null BTC(string $address, string $amount, array $option = null)
+ * @method static \Illuminate\Support\HtmlString|string|null Email(string $email, string $subject, string $body)
+ * @method static \Illuminate\Support\HtmlString|string|null Geo(float $latitude, float $longitude)
+ * @method static \Illuminate\Support\HtmlString|string|null PhoneNumber(string $phoneNumber)
+ * @method static \Illuminate\Support\HtmlString|string|null SMS(string $phoneNumber, string $message)
+ * @method static \Illuminate\Support\HtmlString|string|null WiFi(string $phoneNumber, string $message)
  *
  * @see \SimpleSoftwareIO\QrCode\Generator
  */
@@ -41,10 +41,8 @@ class QrCode extends Facade
 {
     /**
      * Get the registered name of the component.
-     *
-     * @return string
      */
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         self::clearResolvedInstance(Generator::class);
 

@@ -9,14 +9,14 @@ class ImageMerge
     /**
      * Holds the QrCode image.
      *
-     * @var Image
+     * @var \SimpleSoftwareIO\QrCode\Image
      */
     protected $sourceImage;
 
     /**
      * Holds the merging image.
      *
-     * @var Image
+     * @var \SimpleSoftwareIO\QrCode\Image
      */
     protected $mergeImage;
 
@@ -86,33 +86,36 @@ class ImageMerge
     /**
      * Creates a new ImageMerge object.
      *
-     * @param $sourceImage Image The image that will be merged over.
-     * @param $mergeImage Image The image that will be used to merge with $sourceImage
+     * @param  \SimpleSoftwareIO\QrCode\Image  $sourceImage  Image The image that will be merged over.
+     * @param \SimpleSoftwareIO\QrCode\Image  $mergeImage  Image The image that will be used to merge with $sourceImage
      */
     public function __construct(Image $sourceImage, Image $mergeImage)
     {
         $this->sourceImage = $sourceImage;
+        $this->sourceImageHeight = $sourceImage->getHeight();
+        $this->sourceImageWidth = $sourceImage->getWidth();
+
         $this->mergeImage = $mergeImage;
+        $this->mergeImageHeight = $mergeImage->getHeight();
+        $this->mergeImageWidth = $mergeImage->getWidth();
     }
 
     /**
      * Returns an QrCode that has been merge with another image.
      * This is usually used with logos to imprint a logo into a QrCode.
      *
-     * @param $percentage float The percentage of size relative to the entire QR of the merged image
-     *
-     * @return string
+     * @param  float  $percentage  The percentage of size relative to the entire QR of the merged image
      */
-    public function merge($percentage)
+    public function merge(float $percentage): string|false
     {
         $this->setProperties($percentage);
 
-        $img = imagecreatetruecolor($this->sourceImage->getWidth(), $this->sourceImage->getHeight());
-        imagealphablending($img, true);
-        $transparent = imagecolorallocatealpha($img, 0, 0, 0, 127);
-        imagefill($img, 0, 0, $transparent);
+        $img = \imagecreatetruecolor($this->sourceImage->getWidth(), $this->sourceImage->getHeight());
+        \imagealphablending($img, true);
+        $transparent = \imagecolorallocatealpha($img, 0, 0, 0, 127);
+        \imagefill($img, 0, 0, $transparent);
 
-        imagecopy(
+        \imagecopy(
             $img,
             $this->sourceImage->getImageResource(),
             0,
@@ -123,7 +126,7 @@ class ImageMerge
             $this->sourceImage->getHeight()
         );
 
-        imagecopyresampled(
+        \imagecopyresampled(
             $img,
             $this->mergeImage->getImageResource(),
             $this->centerX,
@@ -143,62 +146,51 @@ class ImageMerge
 
     /**
      * Creates a PNG Image.
-     *
-     * @return string
      */
-    protected function createImage()
+    protected function createImage(): string|false
     {
-        ob_start();
+        \ob_start();
         imagepng($this->sourceImage->getImageResource());
 
-        return ob_get_clean();
+        return \ob_get_clean();
     }
 
     /**
      * Sets the objects properties.
      *
-     * @param $percentage float The percentage that the merge image should take up.
-     *
-     * @return void
+     * @param  float  $percentage The percentage that the merge image should take up.
      */
-    protected function setProperties($percentage)
+    protected function setProperties(float $percentage): self
     {
         if ($percentage > 1) {
             throw new InvalidArgumentException('$percentage must be less than 1');
         }
 
-        $this->sourceImageHeight = $this->sourceImage->getHeight();
-        $this->sourceImageWidth = $this->sourceImage->getWidth();
+        $this->calculateOverlap($percentage)->calculateCenter();
 
-        $this->mergeImageHeight = $this->mergeImage->getHeight();
-        $this->mergeImageWidth = $this->mergeImage->getWidth();
-
-        $this->calculateOverlap($percentage);
-        $this->calculateCenter();
+        return $this;
     }
 
     /**
      * Calculates the center of the source Image using the Merge image.
-     *
-     * @return void
      */
-    protected function calculateCenter()
+    protected function calculateCenter(): self
     {
-        $this->centerX = intval(($this->sourceImageWidth / 2) - ($this->postMergeImageWidth / 2));
-        $this->centerY = intval(($this->sourceImageHeight / 2) - ($this->postMergeImageHeight / 2));
+        $this->centerX = \intval(($this->sourceImageWidth / 2) - ($this->postMergeImageWidth / 2));
+        $this->centerY = \intval(($this->sourceImageHeight / 2) - ($this->postMergeImageHeight / 2));
+
+        return $this;
     }
 
     /**
      * Calculates the width of the merge image being placed on the source image.
-     *
-     * @param float $percentage
-     *
-     * @return void
      */
-    protected function calculateOverlap($percentage)
+    protected function calculateOverlap(float $percentage): self
     {
-        $this->mergeRatio = round($this->mergeImageWidth / $this->mergeImageHeight, 2);
-        $this->postMergeImageWidth = intval($this->sourceImageWidth * $percentage);
-        $this->postMergeImageHeight = intval($this->postMergeImageWidth / $this->mergeRatio);
+        $this->mergeRatio = \round($this->mergeImageWidth / $this->mergeImageHeight, 2);
+        $this->postMergeImageWidth = \intval($this->sourceImageWidth * $percentage);
+        $this->postMergeImageHeight = \intval($this->postMergeImageWidth / $this->mergeRatio);
+
+        return $this;
     }
 }

@@ -48,30 +48,24 @@ class BTC implements DataTypeInterface
 
     /**
      * Generates the DataType Object and sets all of its properties.
-     *
-     * @param $arguments
      */
-    public function create(array $arguments)
+    public function create(array $arguments): void
     {
         $this->setProperties($arguments);
     }
 
     /**
      * Returns the correct QrCode format.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->buildBitCoinString();
     }
 
     /**
      * Sets the BitCoin arguments.
-     *
-     * @param array $arguments
      */
-    protected function setProperties(array $arguments)
+    protected function setProperties(array $arguments): self
     {
         if (isset($arguments[0])) {
             $this->address = $arguments[0];
@@ -84,14 +78,14 @@ class BTC implements DataTypeInterface
         if (isset($arguments[2])) {
             $this->setOptions($arguments[2]);
         }
+
+        return $this;
     }
 
     /**
      * Sets the optional BitCoin options.
-     *
-     * @param array $options
      */
-    protected function setOptions(array $options)
+    protected function setOptions(array $options): self
     {
         if (isset($options['label'])) {
             $this->label = $options['label'];
@@ -104,23 +98,23 @@ class BTC implements DataTypeInterface
         if (isset($options['returnAddress'])) {
             $this->returnAddress = $options['returnAddress'];
         }
+
+        return $this;
     }
 
     /**
      * Builds a BitCoin string.
-     *
-     * @return string
      */
-    protected function buildBitCoinString()
+    protected function buildBitCoinString(): string
     {
-        $query = http_build_query([
+        $query = \http_build_query([
             'amount'    => $this->amount,
             'label'     => $this->label,
             'message'  => $this->message,
             'r'         => $this->returnAddress,
         ]);
 
-        $btc = $this->prefix.$this->address.'?'.$query;
+        $btc = $this->prefix . $this->address . '?' . $query;
 
         return $btc;
     }

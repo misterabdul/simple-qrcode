@@ -21,23 +21,21 @@ class Geo implements DataTypeInterface
     /**
      * The latitude.
      *
-     * @var
+     * @var double
      */
     protected $latitude;
 
     /**
      * The longitude.
      *
-     * @var
+     * @var double
      */
     protected $longitude;
 
     /**
      * Generates the DataType Object and sets all of its properties.
-     *
-     * @param $arguments
      */
-    public function create(array $arguments)
+    public function create(array $arguments): void
     {
         $this->latitude = $arguments[0];
         $this->longitude = $arguments[1];
@@ -45,11 +43,12 @@ class Geo implements DataTypeInterface
 
     /**
      * Returns the correct QrCode format.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->prefix.$this->latitude.$this->separator.$this->longitude;
+        return $this->prefix
+            . \strval($this->latitude)
+            . $this->separator
+            . \strval($this->longitude);
     }
 }

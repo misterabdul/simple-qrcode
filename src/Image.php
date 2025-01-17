@@ -7,57 +7,56 @@ class Image
     /**
      * Holds the image resource.
      *
-     * @var resource
+     * @var \GdImage
      */
     protected $image;
 
     /**
      * Creates a new Image object.
-     *
-     * @param $image string An image string
+     * 
+     * @throws \Exception
      */
-    public function __construct($image)
+    public function __construct(string $image)
     {
-        $this->image = imagecreatefromstring($image);
+        $gdImage = \imagecreatefromstring($image);
+        if (!($gdImage instanceof \GdImage)) {
+            throw new \Exception('Can\'t create image from given string.');
+        }
+
+        $this->image = $gdImage;
     }
 
     /*
      * Returns the width of an image
-     *
-     * @return int
-    */
-    public function getWidth()
+     */
+    public function getWidth(): int|false
     {
-        return imagesx($this->image);
+        return \imagesx($this->image);
     }
 
     /*
      * Returns the height of an image
-     *
-     * @return int
      */
-    public function getHeight()
+    public function getHeight(): int|false
     {
-        return imagesy($this->image);
+        return \imagesy($this->image);
     }
 
     /**
      * Returns the image string.
-     *
-     * @return string
      */
-    public function getImageResource()
+    public function getImageResource(): \GdImage
     {
         return $this->image;
     }
 
     /**
      * Sets the image string.
-     *
-     * @param resource $image
      */
-    public function setImageResource($image)
+    public function setImageResource(\GdImage $image): self
     {
         $this->image = $image;
+
+        return $this;
     }
 }

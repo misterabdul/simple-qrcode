@@ -48,30 +48,24 @@ class WiFi implements DataTypeInterface
 
     /**
      * Generates the DataType Object and sets all of its properties.
-     *
-     * @param $arguments
      */
-    public function create(array $arguments)
+    public function create(array $arguments): void
     {
         $this->setProperties($arguments);
     }
 
     /**
      * Returns the correct QrCode format.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->buildWifiString();
     }
 
     /**
      * Builds the WiFi string.
-     *
-     * @return string
      */
-    protected function buildWifiString()
+    protected function buildWifiString(): string
     {
         $wifi = $this->prefix;
 
@@ -93,10 +87,8 @@ class WiFi implements DataTypeInterface
 
     /**
      * Sets the WiFi properties.
-     *
-     * @param $arguments
      */
-    protected function setProperties(array $arguments)
+    protected function setProperties(array $arguments): self
     {
         $arguments = $arguments[0];
         if (isset($arguments['encryption'])) {
@@ -111,5 +103,7 @@ class WiFi implements DataTypeInterface
         if (isset($arguments['hidden'])) {
             $this->hidden = $arguments['hidden'];
         }
+
+        return $this;
     }
 }
